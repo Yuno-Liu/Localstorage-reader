@@ -1,5 +1,5 @@
 {
-    "name": "localstorage-reader-ts",
+    "name": "localstorage-reader",
     "version": "1.0.0",
     "description": "LocalStorage Key 讀取器 - TypeScript 版本",
     "scripts": {
@@ -28,3 +28,4 @@
     "author": "",
     "license": "MIT"
 }
+

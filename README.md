@@ -1,6 +1,6 @@
 # 📌 LocalStorage Key 讀取器 (LocalStorage Reader TS)
 
-[![GitHub License](https://img.shields.io/github/license/Yuno-Liu/Localstorage-reader-TS)](LICENSE)
+[![GitHub License](https://img.shields.io/github/license/Yuno-Liu/Localstorage-reader)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Manifest V3](https://img.shields.io/badge/Chrome%20Extension-Manifest%20V3-4285F4?logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/intro/)
 [![esbuild](https://img.shields.io/badge/Bundled%20with-esbuild-FFCF00?logo=esbuild&logoColor=black)](https://esbuild.github.io/)
@@ -25,8 +25,8 @@
 
 1. 複製專案並安裝相依套件：
    ```bash
-   git clone https://github.com/Yuno-Liu/Localstorage-reader-TS.git
-   cd Localstorage-reader-TS
+   git clone https://github.com/Yuno-Liu/Localstorage-reader.git
+   cd Localstorage-reader
    npm install
    npm run build
    ```
@@ -72,7 +72,7 @@ npm run clean
 ## 📂 專案結構
 
 ```
-Localstorage-reader-TS/
+Localstorage-reader/
 ├── dist/                   # 編譯輸出目錄（載入此資料夾至 Chrome）
 │   ├── content.js
 │   ├── popup.js
@@ -94,3 +94,4 @@ Localstorage-reader-TS/
 ## 📜 授權協議 (License)
 
 本專案採用 [MIT License](LICENSE) 授權。
+
