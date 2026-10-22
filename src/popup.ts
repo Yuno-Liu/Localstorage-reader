@@ -1,3 +1,5 @@
+import { validateStorageKey, formatStorageValue, getCopyButtonFeedback } from "./utils/storageHelper";
+
 document.addEventListener("DOMContentLoaded", () => {
     const keyInput = document.getElementById("keyInput") as HTMLInputElement | null;
     const getValueBtn = document.getElementById("getValueBtn") as HTMLButtonElement | null;
@@ -20,13 +22,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 1. 點擊「取得 Value」按鈕
     getValueBtn.addEventListener("click", async () => {
-        const targetKey = keyInput.value.trim();
+        const validation = validateStorageKey(keyInput.value);
 
-        if (!targetKey) {
-            resultDiv.innerText = "⚠️ 請輸入有效的 Key！";
+        if (!validation.isValid) {
+            resultDiv.innerText = `⚠️ ${validation.error}`;
             copyBtn.style.display = "none";
             return;
         }
+
+        const targetKey = validation.sanitizedKey;
 
         // 儲存輸入紀錄
         chrome.storage.local.set({ lastTargetKey: targetKey });
@@ -52,13 +56,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 if (response && response.success) {
-                    if (response.value !== null && response.value !== undefined) {
-                        currentRawValue = response.value;
-                        resultDiv.innerText = currentRawValue;
-                        copyBtn.style.display = "block"; // 💡 成功讀取到值時顯示複製按鈕
+                    const formatted = formatStorageValue(response.value, targetKey);
+                    currentRawValue = formatted.rawValue;
+                    resultDiv.innerText = formatted.display;
+
+                    if (formatted.canCopy) {
+                        copyBtn.style.display = "block";
                         resetCopyButtonState();
                     } else {
-                        resultDiv.innerText = `❓ 找不到 Key 為 "${targetKey}" 的資料`;
                         copyBtn.style.display = "none";
                     }
                 } else {
@@ -78,24 +83,27 @@ document.addEventListener("DOMContentLoaded", () => {
             await navigator.clipboard.writeText(currentRawValue);
 
             // 按鈕文字變更反饋
-            copyBtn.innerText = "✅ 已複製到剪貼簿！";
-            copyBtn.style.backgroundColor = "#28a745";
+            const fb = getCopyButtonFeedback("copied");
+            copyBtn.innerText = fb.text;
+            copyBtn.style.backgroundColor = fb.backgroundColor;
 
             // 1.5 秒後恢復按鈕原本樣式
             setTimeout(() => {
                 resetCopyButtonState();
             }, 1500);
-        } catch (err) {
-            copyBtn.innerText = "❌ 複製失敗";
-            copyBtn.style.backgroundColor = "#dc3545";
+        } catch {
+            const fb = getCopyButtonFeedback("error");
+            copyBtn.innerText = fb.text;
+            copyBtn.style.backgroundColor = fb.backgroundColor;
         }
     });
 
     // 重置複製按鈕狀態
     function resetCopyButtonState() {
         if (copyBtn) {
-            copyBtn.innerText = "📋 複製內容";
-            copyBtn.style.backgroundColor = "#008CBA";
+            const fb = getCopyButtonFeedback("default");
+            copyBtn.innerText = fb.text;
+            copyBtn.style.backgroundColor = fb.backgroundColor;
         }
     }
 });
